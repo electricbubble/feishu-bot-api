@@ -8,6 +8,13 @@ type i18nPost struct {
 
 type Post func() i18nPost
 
+// WithPost 富文本消息, 可指定语言环境
+//  支持元素如下:
+//  普通文本: WithPostElementText
+//  文字超链接: WithPostElementLink
+//  图片: WithPostElementImage
+//  @所有人: WithPostElementMentionAll
+//  @指定用户(OpenID): WithPostElementMentionByOpenID
 func WithPost(lang Language, title string, elements ...PostElement) Post {
 	return func() i18nPost {
 		es := make([]interface{}, 0, len(elements))

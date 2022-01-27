@@ -45,7 +45,7 @@ func (b *bot) PushPost(p Post, ps ...Post) error {
 }
 
 func (b *bot) PushCard(bgColor CardTitleBgColor, cfg CardConfig, c Card, more ...Card) error {
-	return b.pushMsg(newMsgCard(bgColor, cfg, c, more...))
+	return b.pushMsg(GenMsgCard(bgColor, cfg, c, more...))
 }
 
 func (b *bot) PushImage(imageKey string) error {

@@ -14,6 +14,15 @@ type i18nCard struct {
 
 type Card func() i18nCard
 
+// WithCard 卡片消息, 可指定语言环境
+//  支持元素如下:
+//  普通文本: WithCardElementPlainText
+//  MarkDown: WithCardElementMarkdown
+//  可并排字段: WithCardElementFields
+//  按钮: WithCardElementActions
+//  分割线: WithCardElementHorizontalRule
+//  图片: WithCardElementImage
+//  备注: WithCardElementNote
 func WithCard(lang Language, title string, elem CardElement, elements ...CardElement) Card {
 	elements = append([]CardElement{elem}, elements...)
 	es := make([]interface{}, 0, len(elements))
@@ -29,7 +38,7 @@ func WithCard(lang Language, title string, elem CardElement, elements ...CardEle
 	}
 }
 
-func newMsgCard(bgColor CardTitleBgColor, cfg CardConfig, c Card, more ...Card) map[string]interface{} {
+func GenMsgCard(bgColor CardTitleBgColor, cfg CardConfig, c Card, more ...Card) map[string]interface{} {
 	more = append([]Card{c}, more...)
 	cards := make([]i18nCard, 0, len(more))
 	for _, fn := range more {
@@ -149,6 +158,7 @@ func WithCardConfigEnableUpdateMulti(b bool) CardConfigOption {
 	}
 }
 
+// WithCardConfigCardLink 设置卡片的多端跳转链接
 func WithCardConfigCardLink(url, android, ios, pc string) CardConfigOption {
 	return func(cfg *cardConfig) {
 		if cfg.mCardLink == nil {
@@ -164,6 +174,10 @@ func WithCardConfigCardLink(url, android, ios, pc string) CardConfigOption {
 	}
 }
 
+// WithCardConfig 卡片消息的属性配置
+//  - 是否允许卡片消息被转发, 默认值: true WithCardConfigEnableForward
+//  - 是否为共享卡片, 默认值: false WithCardConfigEnableUpdateMulti
+//  - 设置卡片跳转链接 WithCardConfigCardLink
 func WithCardConfig(opt CardConfigOption, opts ...CardConfigOption) CardConfig {
 	opts = append([]CardConfigOption{opt}, opts...)
 	var ret cardConfig
@@ -174,76 +188,6 @@ func WithCardConfig(opt CardConfigOption, opts ...CardConfigOption) CardConfig {
 		return ret
 	}
 }
-
-// CardConfig 卡片消息的属性配置
-//  - 是否允许卡片消息被转发, 默认值: true
-//  - 是否为共享卡片, 默认值: false
-
-// type CardConfig interface {
-// 	WithEnableForward(b bool) CardConfig
-// 	WithEnableUpdateMulti(b bool) CardConfig
-//
-// 	cfg() *cardConfig
-// }
-//
-// var _ CardConfig = (*cardConfig)(nil)
-
-// CardConfig 卡片消息的属性配置
-//  - 是否允许卡片消息被转发, 默认值: true
-//  - 是否为共享卡片, 默认值: false
-// type cardConfig struct {
-// 	// 是否允许卡片被转发
-// 	//  默认值: true
-// 	//  转发后，卡片上的 `回传交互` 组件将自动置为禁用状态。用户不能在转发后的卡片操作提交数据
-// 	//  客户端版本要求为3.31.0
-// 	EnableForward bool `json:"enable_forward"`
-//
-// 	// 是否为共享卡片
-// 	//  默认值: false
-// 	//  true: 是共享卡片，也即更新卡片的内容对所有收到这张卡片的人员可见。
-// 	//  false: 是独享卡片，仅操作用户可见卡片的更新内容。
-// 	UpdateMulti bool `json:"update_multi"`
-//
-// 	// Deprecated
-// 	//
-// 	// 2021/03/22之后，此字段废弃，所有卡片均升级为自适应屏幕宽度的宽版卡片
-// 	//
-// 	// 是否根据屏幕宽度动态调整消息卡片宽度
-// 	//  默认值: true
-// 	// WideScreenMode bool `json:"wide_screen_mode"`
-// }
-
-// WithCardConfig 默认卡片属性配置
-//  - 是否允许卡片消息被转发, 默认值: true
-//  - 是否为共享卡片, 默认值: false
-// func WithCardConfig() CardConfig {
-// 	return &cardConfig{
-// 		EnableForward: true,
-// 		UpdateMulti:   false,
-// 	}
-// }
-
-// WithEnableForward 设置是否允许卡片被转发
-//  默认值: true
-//  转发后，卡片上的 `回传交互` 组件将自动置为禁用状态。
-//  用户不能在转发后的卡片操作提交数据
-// func (opt *cardConfig) WithEnableForward(b bool) CardConfig {
-// 	opt.EnableForward = b
-// 	return opt
-// }
-
-// WithEnableUpdateMulti 设置是否为共享卡片
-//  默认值: false
-//  true: 是共享卡片，也即更新卡片的内容对所有收到这张卡片的人员可见。
-//  false: 是独享卡片，仅操作用户可见卡片的更新内容。
-// func (opt *cardConfig) WithEnableUpdateMulti(b bool) CardConfig {
-// 	opt.UpdateMulti = b
-// 	return opt
-// }
-//
-// func (opt *cardConfig) cfg() *cardConfig {
-// 	return opt
-// }
 
 type CardElement func(isEmbedded bool) interface{}
 
@@ -379,6 +323,7 @@ func WithCardElementAction(elem CardElement, url string, opts ...CardElementActi
 	}
 }
 
+// WithCardElementActions 按钮, 可指定但固定跳转, 或多端跳转
 func WithCardElementActions(act CardElementAction, actions ...CardElementAction) CardElement {
 	actions = append([]CardElementAction{act}, actions...)
 	as := make([]interface{}, 0, len(actions))
@@ -548,172 +493,3 @@ func WithCardElementNote(elem CardElement, elements ...CardElement) CardElement 
 		}
 	}
 }
-
-// --------------------------------------------------------------------------------
-
-// type msgInteractiveCard struct {
-// 	Header   *msgCardHeader `json:"header,omitempty"`
-// 	Config   *cardConfig    `json:"config,omitempty"`
-// 	Elements []interface{}  `json:"elements"`
-// }
-//
-// type CardOption func() interface{}
-//
-// // WithCard
-// //  headerOpt: 允许设置 nil, 将使用默认值
-// //  cfgOpt: 允许设置 nil, 将使用默认值
-// func WithCard(headerOpt CardHeader, cfgOpt CardConfig, card CardContentOption, cards ...CardContentOption) CardOption {
-// 	header := defaultMsgCardHeader()
-// 	header.apply(headerOpt)
-//
-// 	if cfgOpt == nil {
-// 		cfgOpt = WithCardConfig()
-// 	}
-//
-// 	if card != nil {
-// 		cards = append([]CardContentOption{card}, cards...)
-// 	}
-// 	elem := make(map[string]interface{}, 3)
-// 	for _, fn := range cards {
-// 		i18n := fn()
-// 		es := make([]interface{}, 0, len(i18n.elements))
-// 		for _, fn := range i18n.elements {
-// 			es = append(es, fn())
-// 		}
-// 		elem[i18n.lang] = es
-// 	}
-// 	// elems := make([]interface{}, 0, len(elements))
-// 	// for _, fn := range elements {
-// 	// 	if fn == nil {
-// 	// 		continue
-// 	// 	}
-// 	// 	elems = append(elems, fn())
-// 	// }
-//
-// 	msg := make(map[string]interface{}, 3)
-// 	if header != nil {
-// 		msg["header"] = header
-// 	}
-// 	msg["config"] = cfgOpt.cfg()
-// 	msg["i18n_elements"] = elem
-//
-// 	// msg := msgInteractiveCard{
-// 	// 	Header:   header,
-// 	// 	Config:   cfgOpt.cfg(),
-// 	// 	Elements: elems,
-// 	// }
-//
-// 	// TODO to del
-// 	bs, err := json.MarshalIndent(msg, "", "  ")
-// 	if err != nil {
-// 		log.Fatalln(err)
-// 	}
-// 	fmt.Println(string(bs))
-//
-// 	return func() interface{} {
-// 		return map[string]interface{}{
-// 			"msg_type": "interactive",
-// 			"card":     msg,
-// 		}
-// 	}
-// }
-//
-// func (h *msgCardHeader) apply(opt CardHeader) {
-// 	if opt == nil {
-// 		return
-// 	}
-//
-// 	h.Template = opt.titleBgColor()
-// 	h.Title.I18n = opt.titleI18n()
-// 	// if len(h.Title.I18n) != 0 {
-// 	// 	h.Title.Content = ""
-// 	// }
-// }
-//
-// // CardHeader 卡片消息的 header 配置
-// //  - 标题背景色
-// //  - 多语言标题内容
-// type CardHeader interface {
-// 	// WithTitle 设置多语言标题内容
-// 	WithTitle(lang Language, title string) CardHeader
-//
-// 	titleBgColor() string
-// 	titleI18n() map[string]string
-// }
-//
-// var _ CardHeader = (*cardHeader)(nil)
-//
-// type cardHeader struct {
-// 	bgColor string
-// 	i18n    map[string]string
-// }
-//
-// // WithCardHeader 卡片消息的 header 设置
-// //
-// // 先设置卡片消息标题的背景色
-// //  再通过 .WithTitle(LangChinese, "中文 标题") 设置对应语言的标题内容
-// //
-// //  最佳实践：https://open.feishu.cn/document/ukTMukTMukTM/ukTNwUjL5UDM14SO1ATN#8239feff
-// //  - 绿色（Green）代表完成/成功
-// //  - 橙色（Orange）代表警告/警示
-// //  - 红色（Red）代表错误/异常
-// //  - 灰色（Grey）代表失效
-// func WithCardHeader(bgColor CardTitleBgColor) CardHeader {
-// 	return &cardHeader{
-// 		bgColor: string(bgColor),
-// 		i18n:    make(map[string]string, 3),
-// 	}
-// }
-//
-// // WithTitle 设置多语言标题内容
-// func (opt *cardHeader) WithTitle(lang Language, title string) CardHeader {
-// 	opt.i18n[string(lang)] = title
-// 	return opt
-// }
-
-// func (opt *cardHeader) titleBgColor() string {
-// 	return opt.bgColor
-// }
-//
-// func (opt *cardHeader) titleI18n() map[string]string {
-// 	return opt.i18n
-// }
-//
-// type i18nCardElements struct {
-// 	lang     string
-// 	elements []CardElement
-// }
-//
-// type CardContentOption func() i18nCardElements
-//
-// func WithCardElement(lang Language, elem CardElement, elems ...CardElement) CardContentOption {
-// 	elems = append([]CardElement{elem}, elems...)
-// 	return func() i18nCardElements {
-// 		return i18nCardElements{
-// 			lang:     string(lang),
-// 			elements: elems,
-// 		}
-// 	}
-// }
-
-// type i18nCardContent struct {
-// 	lang    string
-// 	content interface{}
-// }
-
-// type msgCardElement struct {
-// }
-//
-// func newMsgInteractiveCard() interface{} {
-// 	msg := &struct {
-// 		MsgType string      `json:"msg_type"`
-// 		Card    interface{} `json:"card"`
-// 	}{
-// 		MsgType: "interactive",
-// 	}
-//
-// 	card := &msgInteractiveCard{}
-// 	msg.Card = card
-//
-// 	return msg
-// }

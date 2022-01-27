@@ -67,7 +67,7 @@ func TestWithCardTitle(t *testing.T) {
 	//
 	// t.Log(strings.Repeat("-", 50))
 
-	card := newMsgCard(BgColorOrange, nil,
+	card := GenMsgCard(BgColorOrange, nil,
 		WithCard(LangChinese, "标题", WithCardElementMarkdown(mdZhCn)),
 		WithCard(LangEnglish, "TITLE", WithCardElementPlainText("content")),
 		WithCard(LangJapanese, "タイトル", WithCardElementPlainText("japanese")),
