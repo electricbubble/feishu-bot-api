@@ -27,6 +27,9 @@ func WithCard(lang Language, title string, elem CardElement, elements ...CardEle
 	elements = append([]CardElement{elem}, elements...)
 	es := make([]interface{}, 0, len(elements))
 	for _, fn := range elements {
+		if fn == nil {
+			continue
+		}
 		es = append(es, fn(false))
 	}
 	return func() i18nCard {
@@ -265,6 +268,9 @@ func WithCardElementFields(f CardElementField, fields ...CardElementField) CardE
 	fields = append([]CardElementField{f}, fields...)
 	fs := make([]interface{}, 0, len(fields))
 	for _, fn := range fields {
+		if fn == nil {
+			continue
+		}
 		fs = append(fs, fn())
 	}
 
