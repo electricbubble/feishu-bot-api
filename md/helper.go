@@ -38,3 +38,15 @@ func HorizontalRule() string {
 func MentionByOpenID(id string) string {
 	return fmt.Sprintf(`<at id=%s></at>`, id)
 }
+
+func ColorGreen(s string) string {
+	return fmt.Sprintf(`<font color='green'>%s</font>`, s)
+}
+
+func ColorRed(s string) string {
+	return fmt.Sprintf(`<font color='red'>%s</font>`, s)
+}
+
+func ColorGrey(s string) string {
+	return fmt.Sprintf(`<font color='grey'>%s</font>`, s)
+}
