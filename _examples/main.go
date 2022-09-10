@@ -83,7 +83,10 @@ func main() {
 	{ // 发送卡片消息, 可同时设置 3种语言环境
 		mdZhCn := `**title**
 ~~DEL~~
-🙈 看不见的人 👉` + md.MentionByOpenID("ou_c99c5f35d542efc7ee492afe11af19ef")
+🙈 看不见的人 👉` + md.MentionByOpenID("ou_c99c5f35d542efc7ee492afe11af19ef") + "\n" +
+			md.ColorGreen("这是一个绿色文本") + "\n" +
+			md.ColorRed("这是一个红色文本") + "\n" +
+			md.ColorGrey("这是一个灰色文本 ")
 
 		mdEnUs := `~~empty~~`
 
