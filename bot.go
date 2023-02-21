@@ -1,22 +1,21 @@
 package fsBotAPI
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
+	"github.com/electricbubble/xhttpclient"
 	"strings"
 	"time"
 )
 
 type bot struct {
-	webhook string
-
+	cli       *xhttpclient.XClient
+	webhook   string
 	secretKey string
 }
 
 func NewBot(wh string, opts ...BotOption) Bot {
 	wh = strings.TrimSpace(wh)
-	b := new(bot)
+	b := &bot{cli: xhttpclient.NewClient()}
 	if !strings.Contains(wh, "open.feishu.cn") {
 		b.webhook = fmt.Sprintf(_fmtWebhook, wh)
 	} else {
@@ -26,14 +25,6 @@ func NewBot(wh string, opts ...BotOption) Bot {
 		fn(b)
 	}
 	return b
-}
-
-type BotOption func(*bot)
-
-func WithSecretKey(key string) BotOption {
-	return func(b *bot) {
-		b.secretKey = strings.TrimSpace(key)
-	}
 }
 
 func (b *bot) PushText(content string) error {
@@ -66,15 +57,19 @@ func (b *bot) pushMsg(msg map[string]interface{}) (err error) {
 		msg["timestamp"] = ts
 		msg["sign"] = signed
 	}
-	var bsJSON []byte
-	if bsJSON, err = json.Marshal(msg); err != nil {
-		return err
+
+	var reply apiResponse
+	_, respBody, err := b.cli.Do(&reply, nil, xhttpclient.
+		NewPost().
+		Path(b.webhook).
+		Body(msg),
+	)
+	if err != nil {
+		return fmt.Errorf("unexpected error: %w", err)
 	}
-	var req *http.Request
-	if req, err = newRequest(http.MethodPost, b.webhook, bsJSON); err != nil {
-		return err
+	if reply.Code != 0 {
+		return fmt.Errorf("unknown error: %s", respBody)
 	}
 
-	_, err = executeHTTP(req)
 	return
 }

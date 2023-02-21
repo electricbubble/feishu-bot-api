@@ -74,7 +74,7 @@ func TestWithCardTitle(t *testing.T) {
 	)
 
 	bs, err := json.MarshalIndent(card, "", "  ")
-	requireNil(t, err)
+	requireNoError(t, err)
 
 	fmt.Println(string(bs))
 

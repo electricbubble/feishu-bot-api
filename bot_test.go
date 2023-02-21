@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func requireNil(t *testing.T, err error) {
+func requireNoError(t *testing.T, err error) {
 	t.Helper()
 	if err != nil {
 		t.Fatal(err)
@@ -18,37 +18,37 @@ func Test_bot_PushText(t *testing.T) {
 	t.Log(key)
 
 	var (
-		bot = NewBot(key)
+		bot = NewBot(key, WithSecretKey("Kojbs71lT3qC6ichL6Ecpc"), WithDebugOutput())
 		err error
 	)
 
 	content := "test content"
 	// err := bot.PushText(content)
-	// requireNil(t, err)
+	// requireNoError(t, err)
 
 	content = `first line
 second line`
 	// err = bot.PushText(content)
-	// requireNil(t, err)
+	// requireNoError(t, err)
 
 	content = `first line
 second line
 ` + StrMentionAll()
 	// err = bot.PushText(content)
-	// requireNil(t, err)
+	// requireNoError(t, err)
 
 	content = `first line
 second line
 ` + StrMentionByOpenID("ou_c99c5f35d542efc7ee492afe11af19ef") + `
 这个人不在这个群聊里`
 	// err = bot.PushText(content)
-	// requireNil(t, err)
+	// requireNoError(t, err)
 
 	content = `first line
 second line
 ` + StrMentionByOpenID("ou_invalid", "不存在的人")
 	err = bot.PushText(content)
-	requireNil(t, err)
+	requireNoError(t, err)
 }
 
 func Test_bot_PushPost(t *testing.T) {
@@ -87,7 +87,7 @@ func Test_bot_PushPost(t *testing.T) {
 			WithPostElementImage("img_ecffc3b9-8f14-400f-a014-05eca1a4310g"),
 		),
 	)
-	requireNil(t, err)
+	requireNoError(t, err)
 }
 
 func Test_bot_PushImage(t *testing.T) {
@@ -95,7 +95,7 @@ func Test_bot_PushImage(t *testing.T) {
 	t.Log(key)
 
 	err := NewBot(key).PushImage("img_7ea74629-9191-4176-998c-2e603c9c5e8g")
-	requireNil(t, err)
+	requireNoError(t, err)
 
 }
 
@@ -104,7 +104,7 @@ func Test_bot_PushShareChat(t *testing.T) {
 	t.Log(key)
 
 	err := NewBot(key).PushShareChat("oc_f5b1a7eb27ae2c7b6adc2a74faf339ff")
-	requireNil(t, err)
+	requireNoError(t, err)
 }
 
 func Test_bot_PushCard(t *testing.T) {
@@ -171,5 +171,5 @@ func Test_bot_PushCard(t *testing.T) {
 		),
 	)
 
-	requireNil(t, err)
+	requireNoError(t, err)
 }
