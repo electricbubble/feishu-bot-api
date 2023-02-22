@@ -35,8 +35,25 @@ func HorizontalRule() string {
 	return ` ---`
 }
 
-func MentionByOpenID(id string) string {
+// MentionByID 通过 Open ID 或 User ID @指定人
+//
+// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
+func MentionByID(id string) string {
 	return fmt.Sprintf(`<at id=%s></at>`, id)
+}
+
+// MentionByEmail 通过邮箱 @指定人
+//
+// https://open.feishu.cn/document/ugTN1YjL4UTN24CO1UjN/uUzN1YjL1cTN24SN3UjN?from=mcb#acc98e1b
+func MentionByEmail(email string) string {
+	return fmt.Sprintf(`<at email=%s></at>`, email)
+}
+
+// MentionAll @所有人
+//
+// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
+func MentionAll() string {
+	return `<at id=all></at>`
 }
 
 func ColorGreen(s string) string {

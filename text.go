@@ -2,14 +2,17 @@ package fsBotAPI
 
 import "fmt"
 
-// StrMentionAll @所有人
-func StrMentionAll() string {
+// TextMentionAll @所有人
+func TextMentionAll() string {
 	return `<at user_id="all"></at>`
 }
 
-// StrMentionByOpenID @单个用户
-//  如果 Open ID 无效，则取 name 展示
-func StrMentionByOpenID(id string, name ...string) string {
+// TextMentionByOpenID @单个用户
+//
+// 如果 Open ID 无效，则取 name 展示
+//
+// https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN#e1cdee9f
+func TextMentionByOpenID(id string, name ...string) string {
 	var s string
 	if len(name) != 0 {
 		s = name[0]

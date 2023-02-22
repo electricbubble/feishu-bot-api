@@ -1,6 +1,7 @@
 package fsBotAPI
 
 import (
+	"github.com/electricbubble/feishu-bot-api/md"
 	"os"
 	"strings"
 	"testing"
@@ -33,20 +34,20 @@ second line`
 
 	content = `first line
 second line
-` + StrMentionAll()
+` + TextMentionAll()
 	// err = bot.PushText(content)
 	// requireNoError(t, err)
 
 	content = `first line
 second line
-` + StrMentionByOpenID("ou_c99c5f35d542efc7ee492afe11af19ef") + `
+` + TextMentionByOpenID("ou_c99c5f35d542efc7ee492afe11af19ef") + `
 这个人不在这个群聊里`
 	// err = bot.PushText(content)
 	// requireNoError(t, err)
 
 	content = `first line
 second line
-` + StrMentionByOpenID("ou_invalid", "不存在的人")
+` + TextMentionByOpenID("ou_invalid", "不存在的人") + TextMentionAll()
 	err = bot.PushText(content)
 	requireNoError(t, err)
 }
@@ -140,7 +141,7 @@ func Test_bot_PushCard(t *testing.T) {
 					WithCardElementImageTitle("    *图片标题*", true),
 					WithCardElementImageHover("被发现了"),
 				),
-				WithCardElementMarkdown("*test*"),
+				WithCardElementMarkdown("*test*\n"+md.MentionAll()),
 			),
 			WithCardElementFields(
 				WithCardElementField(WithCardElementPlainText("列1\nv1"), true),

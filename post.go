@@ -9,12 +9,13 @@ type i18nPost struct {
 type Post func() i18nPost
 
 // WithPost 富文本消息, 可指定语言环境
-//  支持元素如下:
-//  普通文本: WithPostElementText
-//  文字超链接: WithPostElementLink
-//  图片: WithPostElementImage
-//  @所有人: WithPostElementMentionAll
-//  @指定用户(OpenID): WithPostElementMentionByOpenID
+//
+//	支持元素如下:
+//	普通文本: WithPostElementText
+//	文字超链接: WithPostElementLink
+//	图片: WithPostElementImage
+//	@所有人: WithPostElementMentionAll
+//	@指定用户(OpenID): WithPostElementMentionByOpenID
 func WithPost(lang Language, title string, elements ...PostElement) Post {
 	return func() i18nPost {
 		es := make([]interface{}, 0, len(elements))
@@ -46,7 +47,8 @@ type postElement struct {
 type PostElement func() postElement
 
 // WithPostElementText 富文本消息的文字元素
-//  isUnescape 表示是不是 unescape 解码，默认为 false ，不用可以不填
+//
+//	isUnescape 表示是不是 unescape 解码，默认为 false ，不用可以不填
 func WithPostElementText(text string, isUnescape ...bool) PostElement {
 	return func() postElement {
 		elem := map[string]interface{}{
@@ -104,7 +106,10 @@ func WithPostElementMentionAll() PostElement {
 }
 
 // WithPostElementMentionByOpenID 富文本消息的 @用户
-//  Open ID 必须是有效值，否则仅显示 `@` 符号（实际效果不同于 PushText 时会显示 name）
+//
+// Open ID 必须是有效值，否则仅显示 `@` 符号（实际效果不同于 PushText 时会显示 name）
+//
+// https://open.feishu.cn/document/ugTN1YjL4UTN24CO1UjN/uUzN1YjL1cTN24SN3UjN?from=mcb#acc98e1b
 func WithPostElementMentionByOpenID(id string, name ...string) PostElement {
 	return func() postElement {
 		elem := map[string]interface{}{
