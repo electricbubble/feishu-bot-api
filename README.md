@@ -15,17 +15,12 @@ package main
 
 import (
 	"bytes"
+	"log"
+	"strings"
+
 	fsBotAPI "github.com/electricbubble/feishu-bot-api"
 	"github.com/electricbubble/feishu-bot-api/md"
-	"log"
-	"os"
-	"strings"
 )
-
-func loadTestBot(wh *string, secretKey *string) {
-	*wh = os.Getenv("FS_BOT_WEBHOOK")
-	*secretKey = os.Getenv("FS_BOT_SECRET_KEY")
-}
 
 func main() {
 	webhook := "https://open.feishu.cn/open-apis/bot/v2/hook/045b07bd-xxxx-xxxx-xxxx-2b49c4af1a2b"
@@ -35,8 +30,6 @@ func main() {
 
 	// 开启签名校验时使用
 	secretKey := "你的密钥"
-
-	loadTestBot(&webhook, &secretKey)
 
 	// 开启签名校验
 	bot := fsBotAPI.NewBot(webhook, fsBotAPI.WithSecretKey(secretKey))
