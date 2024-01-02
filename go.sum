@@ -1,2 +1,4 @@
-github.com/electricbubble/xhttpclient v0.2.1 h1:fGTdZhyCn+D8tio1ZJZQypd4nfHLIZalOUFD49AmRv0=
-github.com/electricbubble/xhttpclient v0.2.1/go.mod h1:6fXs0QIRAGvvE2hs9aeCA4GEqNrdCYFmQ2gQy4tJZLg=
+github.com/electricbubble/xhttpclient v0.5.1 h1:yeJDY4QjbIn2mKF/twDw8Wjmo5iMd01acyqa45t2JQc=
+github.com/electricbubble/xhttpclient v0.5.1/go.mod h1:6fXs0QIRAGvvE2hs9aeCA4GEqNrdCYFmQ2gQy4tJZLg=
+golang.org/x/time v0.5.0 h1:o7cqy6amK/52YcAKIPlM3a+Fpj35zvRj2TP+e1xFSfk=
+golang.org/x/time v0.5.0/go.mod h1:3BpzKBy/shNhVucY/MWOyx10tF3SFh9QdLuxbVysPQM=

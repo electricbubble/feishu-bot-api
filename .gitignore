@@ -1,12 +1,9 @@
-### Example user template template
-### Example user template
+### IntelliJ project files
+/.idea/
 
-# IntelliJ project files
-.idea
-*.iml
-out
-gen
-### Go template
+
+
+### Golang
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -20,34 +17,11 @@ gen
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Go workspace file
+go.work
 
-### macOS template
+
+
+### macOS
 # General
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
