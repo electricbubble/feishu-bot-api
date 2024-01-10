@@ -70,7 +70,13 @@ func (b *bot) SendMessage(msg Message) (err error) {
 	}
 
 	if err := msg.Apply(&req.MessageBody); err != nil {
-		return fmt.Errorf(": %w", err)
+		return fmt.Errorf("apply: %w", err)
+	}
+
+	if f := b.opts.HookAfterMessageApply; f != nil {
+		if err := f(&req.MessageBody); err != nil {
+			return fmt.Errorf("hook(AfterMessageApply): %w", err)
+		}
 	}
 
 	var resp apiResponse

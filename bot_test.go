@@ -929,3 +929,17 @@ func Test_bot_SendCardViaTemplate(t *testing.T) {
 	err := b.SendCardViaTemplate(templateID, variables)
 	requireNoError(t, err)
 }
+
+func Test_bot_Hook(t *testing.T) {
+	t.Run("case_1", func(t *testing.T) {
+		fn := func(body *MessageBody) error {
+			return fmt.Errorf("surprise: %s", body.Content.Text)
+		}
+
+		b := NewBot("tmp", NewBotOptions().SetHookAfterMessageApply(fn))
+		err := b.SendText("hi")
+		if err.Error() != "hook(AfterMessageApply): surprise: hi" {
+			t.FailNow()
+		}
+	})
+}

@@ -118,6 +118,8 @@ type BotOptions struct {
 	BaseURL                            string
 	LimiterPerSecond, LimiterPerMinute int
 	SecretKey                          string
+
+	HookAfterMessageApply func(body *MessageBody) error
 }
 
 func NewBotOptions() *BotOptions { return &BotOptions{} }
@@ -165,6 +167,11 @@ func (opts *BotOptions) SetLimiterPerMinute(n int) *BotOptions {
 
 func (opts *BotOptions) SetSecretKey(s string) *BotOptions {
 	opts.SecretKey = s
+	return opts
+}
+
+func (opts *BotOptions) SetHookAfterMessageApply(f func(body *MessageBody) error) *BotOptions {
+	opts.HookAfterMessageApply = f
 	return opts
 }
 
